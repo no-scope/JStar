@@ -6,7 +6,6 @@ public class Vertex
     public int x, y, gScore;
     public Vertex parent;
     public ArrayList <Vertex> neighbourList;
-    private boolean flag = false;
     char type ;
 
     public Vertex(int xCord, int yCord , char type)

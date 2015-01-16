@@ -43,7 +43,7 @@ public class Sol{
            }
            */
 
-        StarSolver meSol = new StarSolver(inputs[1],inputs[0], 9, 13, 9, 2, myMap);
+        StarSolver meSol = new StarSolver(inputs[1],inputs[0], 0, 0, 0, 17, myMap);
 
         ArrayList<Vertex> list = meSol.solver();
         Iterator<Vertex> iterator = list.iterator();

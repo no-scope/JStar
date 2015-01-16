@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class StarSolver
 {
-    public int xMax, yMax, initX, initY, goalX, goalY;
+    public static int xMax, yMax;
+    public int initX, initY, goalX, goalY;
     Vertex[][] map;
 
     public StarSolver(int xM,int yM, int inX, int inY,
