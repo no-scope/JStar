@@ -44,22 +44,30 @@ public class Sol{
            */
 
         StarSolver meSol = new StarSolver(inputs[1],inputs[0], 0, 0, 0, 17, myMap);
-
         ArrayList<Vertex> list = meSol.solver();
         Iterator<Vertex> iterator = list.iterator();
+
+        StarSolver meSol2 = new StarSolver(inputs[1], inputs[0], 0, 2, 0, 4, myMap);
 
         int num = 0;
         System.out.println("__PATH__");
         while(iterator.hasNext()){
             Vertex tmp = iterator.next();
-            myMap[tmp.x][tmp.y].type = 'R';
+            myMap[tmp.x][tmp.y].type = '1';
             num++;
         }
 
+        for (Vertex tmp : meSol2.solver())
+            myMap[tmp.x][tmp.y].type = '2';
+
         for(int i=0;i<13;i++){
             for(int j=0;j<20;j++){
-                if(myMap[i][j].type == 'R'){
+                if(myMap[i][j].type == '1'){
                     System.out.print("\033[31m" + 'O');
+                    System.out.print("\033[0m");
+                }
+                else if (myMap[i][j].type =='2') {
+                    System.out.print("\033[35m" + 'O');
                     System.out.print("\033[0m");
                 }
                 else
