@@ -7,7 +7,7 @@ public class Robot
     public Vertex current;
     public ArrayList<Vertex> path;
 
-    public Robot(int goalX, int goalY, int id)
+    public Robot(int initX,int initY, int goalX, int goalY, int id)
     {
         this.goalX = goalX;
         this.goalY = goalY;
@@ -15,11 +15,12 @@ public class Robot
         this.path = new ArrayList<Vertex>();
     }
 
-    public void checkPath(ArrayList<Vertex> otherPath)
+    public Vertex checkPath(ArrayList<Vertex> otherPath)
     {
-                /*collision! */
+
     }
 
+    public goTo(Vertex pos)
     public void checkFinish(Robot other)
     {
         return  current.isNeighbor(other.current);
