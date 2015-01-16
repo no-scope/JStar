@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 public class Robot
 {
@@ -18,10 +18,21 @@ public class Robot
     public Vertex checkPath(ArrayList<Vertex> otherPath)
     {
 
+	Iterator<Vertex> iter1 = path.iterator();
+	Iterator<Vertex> iter2 = otherPath.iterator();
+	int collisionStep = 0;
+	while (iter1.hasNext() && iter2.hasNext()){
+		Vertex tmp1 = iter1.next();
+		Vertex tmp2 = iter2.next();
+		if (tmp1.equals(tmp2))
+			return tmp1;
+		collisionStep++;
+	}
+	return null;
+
     }
 
-    public goTo(Vertex pos)
-    public void checkFinish(Robot other)
+    public boolean checkFinish(Robot other)
     {
         return  current.isNeighbor(other.current);
     }
