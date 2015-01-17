@@ -35,11 +35,12 @@ public class StarSolver
 
 	public Path solve(Vertex start, HashSet<Vertex> goalSet)
 	{
-		for (int i=0; i<xMax ; i++)
-			for(int j=0; j<yMax ; j++){
+		for (int i = 0; i < xMax ; i++){
+			for(int j = 0; j < yMax ; j++){
 				map[i][j].parent = null;
 				map[i][j].gScore = 0;
 			}
+		}
 
 		openQueue.clear();
 		exploredSet.clear();
