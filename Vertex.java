@@ -27,9 +27,9 @@ public class Vertex
         System.out.println("X:" + x + " Y:" + y);
     }
 
-    public boolean equals(Vertex vert)
+    public boolean equality(Vertex vert)
     {
-        return (x==vert.x)&&(y==vert.y);
+        return ((x == vert.x)&&(y == vert.y));
     }
 
     public void findNeighbours(int maxX, int maxY, Vertex[][] vMap)
@@ -47,9 +47,9 @@ public class Vertex
 
     }
 
-    public ArrayList<Vertex> path()
+    public Path path()
     {
-        ArrayList<Vertex> vertList= new ArrayList<Vertex>();
+        Path vertList= new Path();
 
         Vertex curr = this;
         while (curr != null){

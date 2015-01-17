@@ -1,6 +1,6 @@
 import java.util.PriorityQueue;
 import java.util.Comparator;
-import java.util.ArrayList;
+import java.util.*;
 
 public class StarSolver
 {
@@ -8,8 +8,8 @@ public class StarSolver
 	{
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
-			return (v1.gScore+v1.uCost(goalX, goalY) -
-					(v2.gScore+v2.uCost(goalX, goalY)));
+			return(v1.gScore+v1.uCost(goalX, goalY) -
+					(v2.gScore+v2.uCost(goalX, goalY)) - 1);
 		}
 	};
 
@@ -18,7 +18,7 @@ public class StarSolver
 	Vertex[][] map;
 	private PriorityQueue<Vertex> openQueue
 		= new PriorityQueue<Vertex>(10, gCompare);
-	private ArrayList<Vertex> exploredSet = new ArrayList<Vertex>();
+	private HashSet<Vertex> exploredSet = new HashSet<Vertex>();
 
 	public StarSolver(int xM,int yM, Vertex[][] grid)
 	{
@@ -27,19 +27,19 @@ public class StarSolver
 		map = grid;
 	}
 
-	public void setGoal(int goalX, int goalY)
+	public void setGoal(Vertex Goal)
 	{
-		this.goalX = goalX;
-		this.goalY = goalY;
+		goalX = Goal.x;
+		goalY = Goal.y;
 	}
 
-	public ArrayList<Vertex> solver(int initX, int initY)
+	public Path solve(Vertex start, HashSet<Vertex> goalSet)
 	{
-		Vertex start = map[initX][initY];
-		Vertex goal = map[goalX][goalY];
 		for (int i=0; i<xMax ; i++)
-			for(int j=0; j<yMax ; j++)
+			for(int j=0; j<yMax ; j++){
 				map[i][j].parent = null;
+				map[i][j].gScore = 0;
+			}
 
 		openQueue.clear();
 		exploredSet.clear();
@@ -49,7 +49,7 @@ public class StarSolver
 		while (!openQueue.isEmpty()) {
 
 			Vertex curr = openQueue.remove();
-			if (curr.equals(goal)){
+			if (goalSet.contains(curr)){
 				System.out.println("NUMBER OF ITERS " +num);
 				return curr.path();
 			}
@@ -58,6 +58,9 @@ public class StarSolver
 			for (Vertex tmp : curr.neighbourList) {
 				num++;
 				int gSc = curr.gScore + 1;
+
+				if (tmp.type == 'C')
+					continue;
 
 				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore)) {
 					exploredSet.remove(tmp);
