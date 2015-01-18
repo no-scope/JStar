@@ -8,7 +8,7 @@ CLASSES = \
 	Parser.java \
 	StarSolver.java \
 	Vertex.java \
-	Sol.java
+	DummySolver.java
 
 default: classes
 

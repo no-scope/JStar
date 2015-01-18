@@ -9,6 +9,15 @@ public class StarSolver
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
 			return(v1.gScore+v1.uCost(goalX, goalY) -
+					(v2.gScore+v2.uCost(goalX, goalY)));
+		}
+	};
+
+	private Comparator<Vertex> gSetCompare = new Comparator<Vertex>()
+	{
+		@Override
+		public int compare(Vertex v1, Vertex v2) {
+			return(v1.gScore+v1.uCost(goalX, goalY) -
 					(v2.gScore+v2.uCost(goalX, goalY)) - 1);
 		}
 	};
@@ -18,6 +27,8 @@ public class StarSolver
 	Vertex[][] map;
 	private PriorityQueue<Vertex> openQueue
 		= new PriorityQueue<Vertex>(10, gCompare);
+	private PriorityQueue<Vertex> openSetQueue
+		= new PriorityQueue<Vertex>(10, gSetCompare);
 	private HashSet<Vertex> exploredSet = new HashSet<Vertex>();
 
 	public StarSolver(int xM,int yM, Vertex[][] grid)
@@ -27,14 +38,60 @@ public class StarSolver
 		map = grid;
 	}
 
-	public void setGoal(Vertex Goal)
+	public Vertex solve(Vertex start, Vertex goal, HashSet<Vertex> goalSet)
 	{
-		goalX = Goal.x;
-		goalY = Goal.y;
+		goalX = goal.x;
+		goalY = goal.y;
+
+		for (int i = 0; i < xMax ; i++){
+			for(int j = 0; j < yMax ; j++){
+				map[i][j].parent = null;
+				map[i][j].gScore = 0;
+			}
+		}
+
+		openSetQueue.clear();
+		exploredSet.clear();
+		openSetQueue.add(start);
+		int num = 0;
+
+		while (!openSetQueue.isEmpty()) {
+
+			Vertex curr = openSetQueue.remove();
+			if (goalSet.contains(curr)){
+				return curr.validMove();
+			}
+			exploredSet.add(curr);
+
+			for (Vertex tmp : curr.neighbourList) {
+				num++;
+				int gSc = curr.gScore + 1;
+
+				if (tmp.type == 'C')
+					continue;
+
+				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore)) {
+					exploredSet.remove(tmp);
+				}
+
+				if ((openSetQueue.contains(tmp)) && (gSc < tmp.gScore)) {
+					openSetQueue.remove(tmp);
+				}
+
+				if ((!openSetQueue.contains(tmp)) && (!exploredSet.contains(tmp))) {
+					tmp.setParent(curr);
+					tmp.gScore = gSc;
+					openSetQueue.add(tmp);
+				}
+			}
+		}
+		return null;
 	}
 
-	public Path solve(Vertex start, HashSet<Vertex> goalSet)
+	public Vertex solve(Vertex start, Vertex goal)
 	{
+		goalX = goal.x;
+		goalY = goal.y;
 		for (int i = 0; i < xMax ; i++){
 			for(int j = 0; j < yMax ; j++){
 				map[i][j].parent = null;
@@ -50,9 +107,8 @@ public class StarSolver
 		while (!openQueue.isEmpty()) {
 
 			Vertex curr = openQueue.remove();
-			if (goalSet.contains(curr)){
-				System.out.println("NUMBER OF ITERS " +num);
-				return curr.path();
+			if (curr.equals(goal)){
+				return curr.validMove();
 			}
 			exploredSet.add(curr);
 

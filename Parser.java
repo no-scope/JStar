@@ -1,61 +1,73 @@
 import java.io.*;
 import java.util.Scanner;
 
+/* Just a simple parser class */
+
 public class Parser
 {
-    static int[] inputInts;
-    static char[][] map;
+	static private int[] inputInts;
+	static private char[][] map;
 
-    public Parser(String fil)
-    {
-        try {
-            char ch;
-            BufferedReader in =
-                new BufferedReader(new FileReader(fil));
-            int i;
-            Scanner a = new Scanner(in);
-            inputInts = new int[8];
+	/*
+	 * Class Constructor creates the int array and
+	 * the char grid
+	 */
 
-            for (i = 0; i < 8; i++)
-                inputInts[i] = a.nextInt();
+	public Parser(String fil)
+	{
+		try {
+			char ch;
+			BufferedReader in =
+				new BufferedReader(new FileReader(fil));
+			int i;
+			Scanner a = new Scanner(in);
+			inputInts = new int[8];
 
-            map = new char [inputInts[1]][inputInts[0]];
+			for (i = 0; i < 8; i++)
+				inputInts[i] = a.nextInt();
 
-            String str;
+			map = new char [inputInts[1]][inputInts[0]];
 
-            for (i = 0; i < inputInts[1]; i++){
-                str = a.next();
-                map[i] = str.toCharArray();
-            }
-            in.close();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+			String str;
 
-    public int[] getInputInts()
-    {
-        return inputInts;
-    }
+			for (i = 0; i < inputInts[1]; i++){
+				str = a.next();
+				map[i] = str.toCharArray();
+			}
+			in.close();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
-    public char[][] getMap()
-    {
-        return map;
-    }
+	public int[] getInputInts()
+	{
+		return inputInts;
+	}
 
-    public Vertex[][] getVertexMap()
-    {
-        Vertex[][] vMap = new Vertex[inputInts[1]][inputInts[0]];
-        for (int i = 0; i < inputInts[1]; i++)
-            for (int j = 0; j < inputInts[0]; j++)
-                vMap[i][j] = new Vertex(i, j, map[i][j]);
+	public char[][] getMap()
+	{
+		return map;
+	}
 
-        for (int i = 0; i < inputInts[1]; i++)
-            for (int j = 0; j < inputInts[0]; j++)
-                vMap[i][j].findNeighbours(inputInts[1], inputInts[0], vMap);
-        return vMap;
-    }
+	/*
+	 * Creates the Vertex Map from the char map
+	 * It initializes all Vertexes and their lists of
+	 * neighbours to save time and space
+	 */
+	public Vertex[][] getVertexMap()
+	{
+		Vertex[][] vMap = new Vertex[inputInts[1]][inputInts[0]];
+		for (int i = 0; i < inputInts[1]; i++)
+			for (int j = 0; j < inputInts[0]; j++)
+				vMap[i][j] = new Vertex(i, j, map[i][j]);
+
+		for (int i = 0; i < inputInts[1]; i++)
+			for (int j = 0; j < inputInts[0]; j++)
+				vMap[i][j].findNeighbours(inputInts[1], inputInts[0], vMap);
+		return vMap;
+	}
 
 
 }
