@@ -8,6 +8,10 @@ public class DummySolver
 	static int xMax, yMax;
 	static Vertex[][] myMap;
 
+	/*
+	 * Return the first collision vertex of path1 and path2
+	 * or null if no collision is happening
+	 */
 	private static Vertex checkPath(Path path1, Path path2)
 	{
 
@@ -26,7 +30,11 @@ public class DummySolver
 		return null;
 	}
 
-
+	/*
+	 * Prints the two paths in the same Gridmap
+	 * with different colours with some ASCII
+	 * escape char magic
+	 */
 	public static void printPaths(Path[] paths)
 	{
 		System.out.println("__PATHS__");
@@ -72,7 +80,7 @@ public class DummySolver
 
 	private static Vertex follow (Vertex posR1, Vertex posR2, StarSolver zol)
 	{
-		Vertex ret = zol.solve(posR1, posR2);
+		Vertex ret = zol.solve(posR1, posR2, posR2.neighbourList);
 
 		if (ret == null)
 			return posR1;
@@ -101,7 +109,7 @@ public class DummySolver
 
 		StarSolver zol = new StarSolver(xMax, yMax, myMap);
 
-		HashSet<Vertex> goalSet = new HashSet<Vertex>();
+		ArrayList<Vertex> goalSet = new ArrayList<Vertex>();
 
 		for (Vertex tmp : goal.neighbourList)
 			goalSet.add(tmp);
@@ -109,7 +117,6 @@ public class DummySolver
 		Vertex posR1 = initR1;
 		Vertex posR2 = initR2;
 		Vertex tmp ;
-		boolean flag1 = true, flag2 = true ;
 
 		while(!solved(posR1, posR2, goal)) {
 
@@ -143,19 +150,6 @@ public class DummySolver
 				path0.add(posR1);
 				path1.add(posR2);
 			}
-			try {
-				Thread.sleep(1000);                 //1000 milliseconds is one second.
-			} catch(InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
-			final String ANSI_CLS = "\u001b[2J";
-			final String ANSI_HOME = "\u001b[H";
-			System.out.print(ANSI_CLS + ANSI_HOME);
-			System.out.flush();
-			                paths[0] = path0;
-					        paths[1] = path1;
-			printPaths(paths);
-
 		}
 
 		paths[0] = path0;
@@ -163,6 +157,84 @@ public class DummySolver
 		return paths;
 	}
 
+	/*
+	 * The same as robotSolver but prints it step
+	 * by step for demo and debug purposes
+	 */
+	private static void robotSteps(Vertex initR1,
+			Vertex initR2, Vertex goal)
+	{
+		final String ANSI_CLS = "\u001b[2J";
+		final String ANSI_HOME = "\u001b[H";
+
+		Path[] paths = new Path[2];
+		Path path0 = new Path();
+		Path path1 = new Path();
+
+		path0.add(initR1);
+		path1.add(initR2);
+
+		StarSolver zol = new StarSolver(xMax, yMax, myMap);
+
+		ArrayList<Vertex> goalSet = new ArrayList<Vertex>();
+
+		for (Vertex tmp : goal.neighbourList)
+			goalSet.add(tmp);
+
+		Vertex posR1 = initR1;
+		Vertex posR2 = initR2;
+		Vertex tmp ;
+
+		while(!solved(posR1, posR2, goal)) {
+
+			if (posR1.equals(goal)) {
+				posR2 = zol.solve(posR2, goal, goalSet);
+				path1.add(posR2);
+			}
+			else if (posR2.equals(goal)) {
+				posR1  = zol.solve(posR1, goal, goalSet);
+				path0.add(posR1);
+			}
+			else {
+				tmp = zol.solve(posR1, goal);
+				if (tmp == null)
+					posR1 = follow(posR1, posR2, zol);
+				else
+					posR1 = tmp;
+
+				posR1.type = 'C';
+				posR2.type = 'O';
+
+				tmp = zol.solve(posR2, goal);
+				if (tmp == null)
+					posR2 = follow(posR2, posR1, zol);
+				else
+					posR2 = tmp;
+
+				posR2.type = 'C';
+				posR1.type = 'O';
+
+				path0.add(posR1);
+				path1.add(posR2);
+			}
+
+			/* A time interval to distinguish the steps */
+			try {
+				Thread.sleep(1000);
+			} catch(InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+
+			/* refresh terminal screen */
+			System.out.print(ANSI_CLS + ANSI_HOME);
+			System.out.flush();
+			paths[0] = path0;
+			paths[1] = path1;
+
+			/* print new gridmap */
+			printPaths(paths);
+		}
+	}
 
 	public static void main(String[] args)
 	{
@@ -176,9 +248,8 @@ public class DummySolver
 		Vertex initR2 = myMap[inputs[5]][inputs[4]];
 		Vertex goal   = myMap[inputs[7]][inputs[6]];
 
-		Path[] paths = robotSolver(initR1,initR2, goal);
-		printPaths(paths);
+		//robotSteps(initR1,initR2, goal);
+		printPaths(robotSolver(initR1,initR2,goal));
 	}
-
 }
 

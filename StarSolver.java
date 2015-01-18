@@ -38,7 +38,7 @@ public class StarSolver
 		map = grid;
 	}
 
-	public Vertex solve(Vertex start, Vertex goal, HashSet<Vertex> goalSet)
+	public Vertex solve(Vertex start, Vertex goal, ArrayList<Vertex> goalSet)
 	{
 		goalX = goal.x;
 		goalY = goal.y;
