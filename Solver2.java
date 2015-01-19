@@ -77,6 +77,32 @@ public class Solver2
 	 * If there is no alternative move the robot is
 	 * stalling
 	 */
+	private static Path[] robotSolver(Vertex initR1,
+			Vertex initR2, Vertex goal)
+	{
+
+		Robot r0 = new Robot(xMax, yMax, initR1, goal, myMap);
+		Robot r1 = new Robot(xMax, yMax, initR2, goal, myMap);
+
+		Path[] paths = new Path[2];
+		Path path0 = new Path();
+		Path path1 = new Path();
+
+		path0.add(initR1);
+		path1.add(initR2);
+
+		while(!solved(r0.getPos(), r1.getPos(), goal)) {
+
+			r0.moveAndAvoid(r1.getPos());
+			r1.moveAndAvoid(r0.getPos());
+			path0.add(r0.getPos());
+			path1.add(r1.getPos());
+		}
+		paths[0] = path0;
+		paths[1] = path1;
+
+		return paths;
+	}
 
 	/*
 	 * The same as robotSolver but prints it step
@@ -135,8 +161,8 @@ public class Solver2
 		Vertex initR2 = myMap[inputs[4]][inputs[5]];
 		Vertex goal   = myMap[inputs[6]][inputs[7]];
 
-		robotSteps(initR1,initR2, goal);
-		//printPaths(robotSolver(initR1,initR2,goal));
+		//robotSteps(initR1,initR2, goal);
+		printPaths(robotSolver(initR1,initR2,goal));
 	}
 }
 
