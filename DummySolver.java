@@ -80,7 +80,7 @@ public class DummySolver
 
 	private static Vertex follow (Vertex posR1, Vertex posR2, StarSolver zol)
 	{
-		Vertex ret = zol.solve(posR1, posR2, posR2.neighbourList);
+		Vertex ret = zol.solve(posR1, posR2, true);
 
 		if (ret == null)
 			return posR1;
@@ -95,7 +95,8 @@ public class DummySolver
 	 * After say Robot1 moves to a vertex we mark this
 	 * with 'C' which is ignored (as an obstacle) by
 	 * the A* algorithm.
-	 * If there is no alternative move the robot stalls
+	 * If there is no alternative move the robot is
+	 * stalling
 	 */
 	private static Path[] robotSolver(Vertex initR1,
 			Vertex initR2, Vertex goal)
@@ -109,11 +110,6 @@ public class DummySolver
 
 		StarSolver zol = new StarSolver(xMax, yMax, myMap);
 
-		ArrayList<Vertex> goalSet = new ArrayList<Vertex>();
-
-		for (Vertex tmp : goal.neighbourList)
-			goalSet.add(tmp);
-
 		Vertex posR1 = initR1;
 		Vertex posR2 = initR2;
 		Vertex tmp ;
@@ -121,15 +117,15 @@ public class DummySolver
 		while(!solved(posR1, posR2, goal)) {
 
 			if (posR1.equals(goal)) {
-				posR2 = zol.solve(posR2, goal, goalSet);
+				posR2 = zol.solve(posR2, goal, true);
 				path1.add(posR2);
 			}
 			else if (posR2.equals(goal)) {
-				posR1  = zol.solve(posR1, goal, goalSet);
+				posR1  = zol.solve(posR1, goal, true);
 				path0.add(posR1);
 			}
 			else {
-				tmp = zol.solve(posR1, goal);
+				tmp = zol.solve(posR1, goal, false);
 				if (tmp == null)
 					posR1 = follow(posR1, posR2, zol);
 				else
@@ -138,7 +134,7 @@ public class DummySolver
 				posR1.type = 'C';
 				posR2.type = 'O';
 
-				tmp = zol.solve(posR2, goal);
+				tmp = zol.solve(posR2, goal, false);
 				if (tmp == null)
 					posR2 = follow(posR2, posR1, zol);
 				else
@@ -166,20 +162,13 @@ public class DummySolver
 	{
 		final String ANSI_CLS = "\u001b[2J";
 		final String ANSI_HOME = "\u001b[H";
-
+		StarSolver zol = new StarSolver(xMax, yMax, myMap);
 		Path[] paths = new Path[2];
 		Path path0 = new Path();
 		Path path1 = new Path();
 
 		path0.add(initR1);
 		path1.add(initR2);
-
-		StarSolver zol = new StarSolver(xMax, yMax, myMap);
-
-		ArrayList<Vertex> goalSet = new ArrayList<Vertex>();
-
-		for (Vertex tmp : goal.neighbourList)
-			goalSet.add(tmp);
 
 		Vertex posR1 = initR1;
 		Vertex posR2 = initR2;
@@ -188,15 +177,15 @@ public class DummySolver
 		while(!solved(posR1, posR2, goal)) {
 
 			if (posR1.equals(goal)) {
-				posR2 = zol.solve(posR2, goal, goalSet);
+				posR2 = zol.solve(posR2, goal, true);
 				path1.add(posR2);
 			}
 			else if (posR2.equals(goal)) {
-				posR1  = zol.solve(posR1, goal, goalSet);
+				posR1  = zol.solve(posR1, goal, true);
 				path0.add(posR1);
 			}
 			else {
-				tmp = zol.solve(posR1, goal);
+				tmp = zol.solve(posR1, goal, false);
 				if (tmp == null)
 					posR1 = follow(posR1, posR2, zol);
 				else
@@ -205,7 +194,7 @@ public class DummySolver
 				posR1.type = 'C';
 				posR2.type = 'O';
 
-				tmp = zol.solve(posR2, goal);
+				tmp = zol.solve(posR2, goal, false);
 				if (tmp == null)
 					posR2 = follow(posR2, posR1, zol);
 				else
@@ -242,11 +231,11 @@ public class DummySolver
 		Parser pars = new Parser(args[0]);
 		myMap = pars.getVertexMap();
 		int[] inputs = pars.getInputInts();
-		xMax = inputs[1];
-		yMax = inputs[0];
-		Vertex initR1 = myMap[inputs[3]][inputs[2]];
-		Vertex initR2 = myMap[inputs[5]][inputs[4]];
-		Vertex goal   = myMap[inputs[7]][inputs[6]];
+		xMax = inputs[0];
+		yMax = inputs[1];
+		Vertex initR1 = myMap[inputs[2]][inputs[3]];
+		Vertex initR2 = myMap[inputs[4]][inputs[5]];
+		Vertex goal   = myMap[inputs[6]][inputs[7]];
 
 		//robotSteps(initR1,initR2, goal);
 		printPaths(robotSolver(initR1,initR2,goal));

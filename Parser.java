@@ -26,11 +26,11 @@ public class Parser
 			for (i = 0; i < 8; i++)
 				inputInts[i] = a.nextInt();
 
-			map = new char [inputInts[1]][inputInts[0]];
+			map = new char [inputInts[0]][inputInts[1]];
 
 			String str;
 
-			for (i = 0; i < inputInts[1]; i++){
+			for (i = 0; i < inputInts[0]; i++){
 				str = a.next();
 				map[i] = str.toCharArray();
 			}
@@ -58,14 +58,14 @@ public class Parser
 	 */
 	public Vertex[][] getVertexMap()
 	{
-		Vertex[][] vMap = new Vertex[inputInts[1]][inputInts[0]];
-		for (int i = 0; i < inputInts[1]; i++)
-			for (int j = 0; j < inputInts[0]; j++)
+		Vertex[][] vMap = new Vertex[inputInts[0]][inputInts[1]];
+		for (int i = 0; i < inputInts[0]; i++)
+			for (int j = 0; j < inputInts[1]; j++)
 				vMap[i][j] = new Vertex(i, j, map[i][j]);
 
-		for (int i = 0; i < inputInts[1]; i++)
-			for (int j = 0; j < inputInts[0]; j++)
-				vMap[i][j].findNeighbours(inputInts[1], inputInts[0], vMap);
+		for (int i = 0; i < inputInts[0]; i++)
+			for (int j = 0; j < inputInts[1]; j++)
+				vMap[i][j].findNeighbours(inputInts[0], inputInts[1], vMap);
 		return vMap;
 	}
 

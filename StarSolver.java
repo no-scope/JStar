@@ -1,9 +1,25 @@
-import java.util.PriorityQueue;
-import java.util.Comparator;
 import java.util.*;
 
+/*
+ * This is the A* search implemetation
+ *
+ * It's a pretty basic A* search with the
+ * difference that it doesnt create states
+ * itself but uses the already created and initialized
+ * Vertex[][] storing the gscores and the parents in
+ * the corresponding fields of each Vertex.
+ *
+ * We have implemented the solve method to reach either
+ * the goal vertex  or any of its neighbours in case
+ * a robot reach the goal so the other
+ * just has to reach a neighbour of the goal.
+ */
 public class StarSolver
 {
+	/*
+	 * The standard comparator change uCost to oCost if
+	 * you want to use overestimating heurestic.
+	 */
 	private Comparator<Vertex> gCompare = new Comparator<Vertex>()
 	{
 		@Override
@@ -13,6 +29,14 @@ public class StarSolver
 		}
 	};
 
+	/*
+	 * The comparator in case we have a set of goals
+	 * to reach.
+	 * We just substract 1 of the standard heurestic cost
+	 * so that it remains underestimation of the real cost
+	 * regardless of the neighbour of the goal we are
+	 * calculating the cost.
+	 */
 	private Comparator<Vertex> gSetCompare = new Comparator<Vertex>()
 	{
 		@Override
@@ -38,11 +62,19 @@ public class StarSolver
 		map = grid;
 	}
 
-	public Vertex solve(Vertex start, Vertex goal, ArrayList<Vertex> goalSet)
+	/*
+	 * The Solver for neighbour goalset.
+	 */
+	public Vertex solve(Vertex start, Vertex goal, boolean reachNeighbour)
 	{
+		PriorityQueue<Vertex> queue  = openQueue;
 		goalX = goal.x;
 		goalY = goal.y;
 
+		/*
+		 * Refresh the Vertex map between each call of the solve()
+		 * method.
+		 */
 		for (int i = 0; i < xMax ; i++){
 			for(int j = 0; j < yMax ; j++){
 				map[i][j].parent = null;
@@ -50,23 +82,35 @@ public class StarSolver
 			}
 		}
 
+		if (reachNeighbour)
+			queue = openSetQueue;
+		else
+			queue = openQueue;
+
+		/* Clear the Queues and the Sets */
+		openQueue.clear();
 		openSetQueue.clear();
 		exploredSet.clear();
-		openSetQueue.add(start);
+		queue.add(start);
 		int num = 0;
 
-		while (!openSetQueue.isEmpty()) {
+		/* Go ! */
+		while (!queue.isEmpty()) {
 
-			Vertex curr = openSetQueue.remove();
-			if (goalSet.contains(curr)){
+			/* Get the Vertex with min gscore */
+			Vertex curr = queue.remove();
+
+			if ((curr.isNeighbour(goal) && reachNeighbour) ||
+			    curr.equals(goal))
 				return curr.validMove();
-			}
+
 			exploredSet.add(curr);
 
 			for (Vertex tmp : curr.neighbourList) {
 				num++;
 				int gSc = curr.gScore + 1;
 
+				/* We found a Collision Here */
 				if (tmp.type == 'C')
 					continue;
 
@@ -74,63 +118,14 @@ public class StarSolver
 					exploredSet.remove(tmp);
 				}
 
-				if ((openSetQueue.contains(tmp)) && (gSc < tmp.gScore)) {
-					openSetQueue.remove(tmp);
-				}
-
-				if ((!openSetQueue.contains(tmp)) && (!exploredSet.contains(tmp))) {
-					tmp.setParent(curr);
-					tmp.gScore = gSc;
-					openSetQueue.add(tmp);
-				}
-			}
-		}
-		return null;
-	}
-
-	public Vertex solve(Vertex start, Vertex goal)
-	{
-		goalX = goal.x;
-		goalY = goal.y;
-		for (int i = 0; i < xMax ; i++){
-			for(int j = 0; j < yMax ; j++){
-				map[i][j].parent = null;
-				map[i][j].gScore = 0;
-			}
-		}
-
-		openQueue.clear();
-		exploredSet.clear();
-		openQueue.add(start);
-		int num = 0;
-
-		while (!openQueue.isEmpty()) {
-
-			Vertex curr = openQueue.remove();
-			if (curr.equals(goal)){
-				return curr.validMove();
-			}
-			exploredSet.add(curr);
-
-			for (Vertex tmp : curr.neighbourList) {
-				num++;
-				int gSc = curr.gScore + 1;
-
-				if (tmp.type == 'C')
-					continue;
-
-				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore)) {
-					exploredSet.remove(tmp);
-				}
-
-				if ((openQueue.contains(tmp)) && (gSc < tmp.gScore)) {
-					openQueue.remove(tmp);
+				if ((queue.contains(tmp)) && (gSc < tmp.gScore)) {
+					queue.remove(tmp);
 				}
 
 				if ((!openQueue.contains(tmp)) && (!exploredSet.contains(tmp))) {
 					tmp.setParent(curr);
 					tmp.gScore = gSc;
-					openQueue.add(tmp);
+					queue.add(tmp);
 				}
 			}
 		}

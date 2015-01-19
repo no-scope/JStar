@@ -1,6 +1,15 @@
 import java.util.ArrayList;
 import java.lang.Math;
 
+/* Vertex class
+ *
+ * In each vertex we store the gscore and the parent
+ * vertex so it also serves as a state in the A* search
+ *
+ * We have reduced memory usage as we only create
+ * Xmax * Ymax states/vertexes regardless of the A*
+ * search (We don't create states during the A* search).
+ */
 public class Vertex
 {
 	public int x, y, gScore;
@@ -32,6 +41,12 @@ public class Vertex
 		return ((x == vert.x)&&(y == vert.y));
 	}
 
+	/*
+	 * Creates ALL possible neighbours of a vertex
+	 * and puts them in the field neighbourList.
+	 * Should be called only once for each vertex
+	 * to save memory and to have a consistent grid
+	 */
 	public void findNeighbours(int maxX, int maxY, Vertex[][] vMap)
 	{
 		neighbourList = new ArrayList<Vertex>();
@@ -44,9 +59,12 @@ public class Vertex
 			neighbourList.add(vMap[x][y-1]);
 		if ((y+1 < maxY) && (vMap[x][y+1].type == 'O'))
 			neighbourList.add(vMap[x][y+1]);
-
 	}
 
+	/*
+	 * Gives the path from a this vertex back to the
+	 * start.
+	 */
 	public Path path()
 	{
 		Path vertList= new Path();
@@ -60,6 +78,15 @@ public class Vertex
 		return vertList;
 	}
 
+	/*
+	 * Gives the second node of a vertex path
+	 *
+	 * Suppose we have the path
+	 * [0][0] [0][1] [1][1]
+	 * it will return [0][1] which is the first node
+	 * we should visit to follow the path to this
+	 * vertex.
+	 */
 	public Vertex validMove()
 	{
 		Vertex curr = this;
@@ -73,11 +100,17 @@ public class Vertex
 		return curr;
 	}
 
+	/*
+	 * Manhattan distance heurestic (underestimate)
+	 */
 	public int uCost(int xGoal, int yGoal)
 	{
 		return Math.abs(x - xGoal) + Math.abs(y - yGoal);
 	}
 
+	/*
+	 * Overestimating heurestic 2 * max(xDist, yDist)
+	 */
 	public int oCost(int xGoal, int yGoal)
 	{
 		return 2 * Math.max(Math.abs(x - xGoal), Math.abs(y - yGoal));
