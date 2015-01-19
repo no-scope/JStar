@@ -66,7 +66,7 @@ public class StarSolver
 	/*
 	 * The Solver for neighbour goalset.
 	 */
-	public Vertex solve(Vertex start, Vertex goal, boolean reachNeighbour)
+	public Vertex solve(Vertex start, Vertex goal, Vertex other, boolean reachNeighbour)
 	{
 		PriorityQueue<Vertex> queue  = openQueue;
 		goalX = goal.x;
@@ -109,14 +109,17 @@ public class StarSolver
 			for (Vertex tmp : curr.neighbourList) {
 				int gSc = curr.gScore + 1;
 
-				/* We found a Collision Here */
+				if (tmp.equals(other))
+					continue;
+				/* We found a Collision Here
 				if (tmp.type == 'C') {
 
-					/* DEBUG */
+					 DEBUG
 					System.out.print("Collision found at : ");
 					tmp.printme();
 					continue;
 				}
+				*/
 				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore))
 					exploredSet.remove(tmp);
 
