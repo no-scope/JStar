@@ -106,14 +106,14 @@ public class Solver
 
 			/* DEBUG */
 
-			   if (!r0.getPos().equals(goal))
-				System.out.println("__Robot1 Searching...");
+			//if (!r0.getPos().equals(goal))
+			//	System.out.println("__Robot1 Searching...");
 
 			r0.moveAndAvoid(r1.getPos());
 			/* DEBUG */
 
-			if (!r1.getPos().equals(goal))
-				System.out.println("__Robot2 Searching...");
+			//if (!r1.getPos().equals(goal))
+			//	System.out.println("__Robot2 Searching...");
 
 			r1.moveAndAvoid(r0.getPos());
 
@@ -122,7 +122,7 @@ public class Solver
 		}
 		paths[0] = path0;
 		paths[1] = path1;
-		System.out.println("Number Of States = " + (r0.getStates()+r1.getStates()));
+		//System.out.println("Number Of States = " + (r0.getStates()+r1.getStates()));
 		return paths;
 	}
 

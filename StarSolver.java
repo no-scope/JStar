@@ -108,15 +108,15 @@ public class StarSolver
 				return curr.validMove();
 			if (curr.equals(other)){
 				/* DEBUG */
-				System.out.print("Detected Possible Conflict at : ");
-				curr.printme();
+				//System.out.print("Detected Possible Conflict at : ");
+				//curr.printme();
 				continue;
 			}
 
 			exploredSet.add(curr);
 
 			/* DEBUG */
-			curr.printme();
+			//curr.printme();
 
 			for (Vertex tmp : curr.neighbourList) {
 				int gSc = curr.gScore + 1;
