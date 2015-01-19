@@ -100,7 +100,7 @@ public class Solver2
 		}
 		paths[0] = path0;
 		paths[1] = path1;
-
+		System.out.println("Number Of States = " + (r0.getStates()+r1.getStates()));
 		return paths;
 	}
 
@@ -146,6 +146,7 @@ public class Solver2
 
 			/* print new gridmap */
 			printPaths(paths);
+
 		}
 	}
 

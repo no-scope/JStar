@@ -4,6 +4,12 @@ public class Robot
 	private Vertex position;
 	private Vertex goal;
 
+	/*
+	 * states number this robot produced during
+	 * his A* searches that we will use for the graphs
+	 */
+	private int statesNum = 0;
+
 	public Robot(int xMax, int yMax, Vertex pos, Vertex goal, Vertex[][] myMap)
 	{
 		search = new StarSolver(xMax, yMax, myMap);
@@ -14,6 +20,11 @@ public class Robot
 	public Vertex getPos()
 	{
 		return position;
+	}
+
+	public int getStates()
+	{
+		return search.getNumberOfStates();
 	}
 
 	private Vertex follow(Vertex other)

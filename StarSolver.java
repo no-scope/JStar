@@ -24,8 +24,8 @@ public class StarSolver
 	{
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
-			return (v1.gScore+v1.uCost(goalX, goalY) -
-					(v2.gScore+v2.uCost(goalX, goalY)));
+			return (v1.gScore+v1.oCost(goalX, goalY) -
+					(v2.gScore+v2.oCost(goalX, goalY)));
 		}
 	};
 
@@ -41,8 +41,8 @@ public class StarSolver
 	{
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
-			return (v1.gScore+v1.uCost(goalX, goalY) -
-					(v2.gScore+v2.uCost(goalX, goalY)) - 1);
+			return (v1.gScore+v1.oCost(goalX, goalY) -
+					(v2.gScore+v2.oCost(goalX, goalY)) - 1);
 		}
 	};
 
@@ -50,11 +50,13 @@ public class StarSolver
 	public static int xMax, yMax, goalX, goalY;
 	Vertex[][] map;
 	private int statesSum = 0;
+
 	private PriorityQueue<Vertex> openQueue
 		= new PriorityQueue<Vertex>(10, gCompare);
 	private PriorityQueue<Vertex> openSetQueue
 		= new PriorityQueue<Vertex>(10, gSetCompare);
-	private HashSet<Vertex> exploredSet = new HashSet<Vertex>();
+	private HashSet<Vertex> exploredSet
+		= new HashSet<Vertex>();
 
 	public StarSolver(int xM,int yM, Vertex[][] grid)
 	{
@@ -66,7 +68,8 @@ public class StarSolver
 	/*
 	 * The Solver for neighbour goalset.
 	 */
-	public Vertex solve(Vertex start, Vertex goal, Vertex other, boolean reachNeighbour)
+	public Vertex solve(Vertex start, Vertex goal,
+			Vertex other, boolean reachNeighbour)
 	{
 		PriorityQueue<Vertex> queue  = openQueue;
 		goalX = goal.x;
@@ -101,7 +104,7 @@ public class StarSolver
 			Vertex curr = queue.remove();
 
 			if ((curr.isNeighbour(goal) && reachNeighbour) ||
-			    curr.equals(goal))
+					curr.equals(goal))
 				return curr.validMove();
 
 			exploredSet.add(curr);
@@ -112,14 +115,14 @@ public class StarSolver
 				if (tmp.equals(other))
 					continue;
 				/* We found a Collision Here
-				if (tmp.type == 'C') {
+				   if (tmp.type == 'C') {
 
-					 DEBUG
-					System.out.print("Collision found at : ");
-					tmp.printme();
-					continue;
-				}
-				*/
+				   DEBUG
+				   System.out.print("Collision found at : ");
+				   tmp.printme();
+				   continue;
+				   }
+				   */
 				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore))
 					exploredSet.remove(tmp);
 
