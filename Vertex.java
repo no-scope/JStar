@@ -113,7 +113,7 @@ public class Vertex
 	 */
 	public int oCost(int xGoal, int yGoal)
 	{
-		return 2 * Math.max(Math.abs(x - xGoal), Math.abs(y - yGoal));
+		return 3 * Math.max(Math.abs(x - xGoal), Math.abs(y - yGoal));
 	}
 
 	public boolean isNeighbour(Vertex other)

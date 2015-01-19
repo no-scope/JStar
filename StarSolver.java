@@ -114,13 +114,11 @@ public class StarSolver
 				if (tmp.type == 'C')
 					continue;
 
-				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore)) {
+				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore))
 					exploredSet.remove(tmp);
-				}
 
-				if ((queue.contains(tmp)) && (gSc < tmp.gScore)) {
+				if ((queue.contains(tmp)) && (gSc < tmp.gScore))
 					queue.remove(tmp);
-				}
 
 				if ((!openQueue.contains(tmp)) && (!exploredSet.contains(tmp))) {
 					tmp.setParent(curr);
