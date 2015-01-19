@@ -24,8 +24,8 @@ public class StarSolver
 	{
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
-			return (v1.gScore+v1.oCost(goalX, goalY) -
-					(v2.gScore+v2.oCost(goalX, goalY)));
+			return (v1.gScore+v1.uCost(goalX, goalY) -
+					(v2.gScore+v2.uCost(goalX, goalY)));
 		}
 	};
 
@@ -41,8 +41,8 @@ public class StarSolver
 	{
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
-			return (v1.gScore+v1.oCost(goalX, goalY) -
-					(v2.gScore+v2.oCost(goalX, goalY)) - 1);
+			return (v1.gScore+v1.uCost(goalX, goalY) -
+					(v2.gScore+v2.uCost(goalX, goalY)) - 1);
 		}
 	};
 
@@ -106,23 +106,18 @@ public class StarSolver
 			if ((curr.isNeighbour(goal) && reachNeighbour) ||
 					curr.equals(goal))
 				return curr.validMove();
+			if (curr.equals(other)){
+				//System.out.print("Detected Possible Conflict at : ");
+				//curr.printme();
+				continue;
+			}
 
 			exploredSet.add(curr);
 			//curr.printme();
+
 			for (Vertex tmp : curr.neighbourList) {
 				int gSc = curr.gScore + 1;
 
-				if (tmp.equals(other))
-					continue;
-				/* We found a Collision Here
-				   if (tmp.type == 'C') {
-
-				   DEBUG
-				   System.out.print("Collision found at : ");
-				   tmp.printme();
-				   continue;
-				   }
-				   */
 				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore))
 					exploredSet.remove(tmp);
 

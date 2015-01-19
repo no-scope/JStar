@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Solver2
+public class Solver
 {
 
 	static int xMax, yMax;
@@ -58,6 +58,17 @@ public class Solver2
 
 	}
 
+	/*
+	 * less fancy printing method without bash escape
+	 * seqs just outputs a list of the path vertexes
+	 */
+	private static void simplePrint(Path path)
+	{
+		for (Vertex tmp : path)
+			tmp.printme();
+
+	}
+
 	private static boolean solved(Vertex pos1, Vertex pos2, Vertex goal)
 	{
 		if ((pos1.equals(goal) && pos1.isNeighbour(pos2)) ||
@@ -93,14 +104,25 @@ public class Solver2
 
 		while(!solved(r0.getPos(), r1.getPos(), goal)) {
 
+			/* DEBUG */
+			/*
+			   if (!r0.getPos().equals(goal))
+				System.out.println("__Robot1 Searching...");
+			*/
 			r0.moveAndAvoid(r1.getPos());
+			/* DEBUG */
+			/*
+			if (!r1.getPos().equals(goal))
+				System.out.println("__Robot2 Searching...");
+			*/
 			r1.moveAndAvoid(r0.getPos());
+
 			path0.add(r0.getPos());
 			path1.add(r1.getPos());
 		}
 		paths[0] = path0;
 		paths[1] = path1;
-		System.out.println("Number Of States = " + (r0.getStates()+r1.getStates()));
+		//System.out.println("Number Of States = " + (r0.getStates()+r1.getStates()));
 		return paths;
 	}
 
@@ -150,20 +172,40 @@ public class Solver2
 		}
 	}
 
+
+
 	public static void main(String[] args)
 	{
+		if (args.length == 2) {
+			Parser pars = new Parser(args[0]);
+			myMap = pars.getVertexMap();
+			int[] inputs = pars.getInputInts();
+			xMax = inputs[0];
+			yMax = inputs[1];
+			Vertex initR1 = myMap[inputs[2]][inputs[3]];
+			Vertex initR2 = myMap[inputs[4]][inputs[5]];
+			Vertex goal   = myMap[inputs[6]][inputs[7]];
 
-		Parser pars = new Parser(args[0]);
-		myMap = pars.getVertexMap();
-		int[] inputs = pars.getInputInts();
-		xMax = inputs[0];
-		yMax = inputs[1];
-		Vertex initR1 = myMap[inputs[2]][inputs[3]];
-		Vertex initR2 = myMap[inputs[4]][inputs[5]];
-		Vertex goal   = myMap[inputs[6]][inputs[7]];
-
-		//robotSteps(initR1,initR2, goal);
-		printPaths(robotSolver(initR1,initR2,goal));
+			if (args[1].equals("simple")) {
+				Path[] ansPaths = new Path[2];
+				ansPaths = robotSolver(initR1,initR2,goal);
+				System.out.println("__Path of ROBOT1__");
+				simplePrint(ansPaths[0]);
+				System.out.println("__Path of ROBOT2__");
+				simplePrint(ansPaths[1]);
+			}
+			else if (args[1].equals("map"))
+				printPaths(robotSolver(initR1,initR2,goal));
+			else if (args[1].equals("step"))
+				robotSteps(initR1,initR2,goal);
+			else {
+				System.out.println("Wrong option");
+				System.out.println("Available options : simple map step");
+			}
+		}
+		else {
+			System.out.println("Usage: java Solver input_file option");
+			System.out.println("Available options : simple map step");
+		}
 	}
 }
-

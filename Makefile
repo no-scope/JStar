@@ -8,8 +8,8 @@ CLASSES = \
 	Parser.java \
 	StarSolver.java \
 	Vertex.java \
-	Solver2.java \
-	Robot.java
+	Robot.java \
+	Solver.java \
 
 default: classes
 
