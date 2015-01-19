@@ -24,7 +24,7 @@ public class StarSolver
 	{
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
-			return(v1.gScore+v1.uCost(goalX, goalY) -
+			return (v1.gScore+v1.uCost(goalX, goalY) -
 					(v2.gScore+v2.uCost(goalX, goalY)));
 		}
 	};
@@ -41,7 +41,7 @@ public class StarSolver
 	{
 		@Override
 		public int compare(Vertex v1, Vertex v2) {
-			return(v1.gScore+v1.uCost(goalX, goalY) -
+			return (v1.gScore+v1.uCost(goalX, goalY) -
 					(v2.gScore+v2.uCost(goalX, goalY)) - 1);
 		}
 	};

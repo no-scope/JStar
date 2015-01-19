@@ -14,7 +14,7 @@ public class Vertex
 {
 	public int x, y, gScore;
 	public Vertex parent;
-	public ArrayList <Vertex> neighbourList;
+	public ArrayList<Vertex> neighbourList;
 	char type ;
 
 	public Vertex(int xCord, int yCord , char type)
