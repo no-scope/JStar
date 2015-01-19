@@ -49,6 +49,7 @@ public class StarSolver
 
 	public static int xMax, yMax, goalX, goalY;
 	Vertex[][] map;
+	private int statesSum = 0;
 	private PriorityQueue<Vertex> openQueue
 		= new PriorityQueue<Vertex>(10, gCompare);
 	private PriorityQueue<Vertex> openSetQueue
@@ -92,7 +93,6 @@ public class StarSolver
 		openSetQueue.clear();
 		exploredSet.clear();
 		queue.add(start);
-		int num = 0;
 
 		/* Go ! */
 		while (!queue.isEmpty()) {
@@ -105,15 +105,18 @@ public class StarSolver
 				return curr.validMove();
 
 			exploredSet.add(curr);
-
+			//curr.printme();
 			for (Vertex tmp : curr.neighbourList) {
-				num++;
 				int gSc = curr.gScore + 1;
 
 				/* We found a Collision Here */
-				if (tmp.type == 'C')
-					continue;
+				if (tmp.type == 'C') {
 
+					/* DEBUG */
+					System.out.print("Collision found at : ");
+					tmp.printme();
+					continue;
+				}
 				if ((exploredSet.contains(tmp)) && (gSc < tmp.gScore))
 					exploredSet.remove(tmp);
 
@@ -124,9 +127,16 @@ public class StarSolver
 					tmp.setParent(curr);
 					tmp.gScore = gSc;
 					queue.add(tmp);
+					statesSum++;
 				}
 			}
 		}
 		return null;
 	}
+
+	public int getNumberOfStates()
+	{
+		return statesSum;
+	}
+
 }

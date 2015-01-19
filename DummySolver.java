@@ -147,7 +147,7 @@ public class DummySolver
 				path1.add(posR2);
 			}
 		}
-
+		System.out.println("Total Number of States = " + zol.getNumberOfStates());
 		paths[0] = path0;
 		paths[1] = path1;
 		return paths;
