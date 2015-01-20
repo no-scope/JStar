@@ -6,6 +6,37 @@ public class Solver
 	static int xMax, yMax;
 	static Vertex[][] myMap;
 
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_RESET = "\u001B[0m";
+
+	public static final Map<Character, String> codes =
+	new HashMap<Character, String>() {{
+		// unnamed init
+		put('1', ANSI_RED + 'O' + ANSI_RESET);
+		put('2', ANSI_YELLOW + 'O' + ANSI_RESET);
+		put('3', ANSI_BLUE + 'O' + ANSI_RESET);
+		put('4', ANSI_PURPLE + 'X' + ANSI_RESET);
+		put('O', "O");
+		put('X', "X");
+	}};
+
+
+	/* shows the whole map using 
+	 * designated colourcodes 
+	 */
+	public static void showMap()
+	{
+		for (int i = 0; i < xMax; i++) {
+			for (int j = 0; j < yMax; j++)
+				System.out.print(codes.get(myMap[i][j].type));
+		
+			System.out.println();
+		}
+	}
+
 	/*
 	 * Prints the two paths in the same Gridmap
 	 * with different colours with some Bash
@@ -24,31 +55,8 @@ public class Solver
 				else
 					myMap[tmp.x][tmp.y].type = '2';
 
-
-		for (int i=0;i<xMax; i++) {
-			for (int j=0; j<yMax; j++) {
-				if(myMap[i][j].type == '1') {
-					System.out.print("\033[31m" + 'O');
-					System.out.print("\033[0m");
-				}
-				else if (myMap[i][j].type =='2') {
-					System.out.print("\033[33m" + 'O');
-					System.out.print("\033[0m");
-				}
-				else if (myMap[i][j].type =='3') {
-					System.out.print("\033[35m" + 'O');
-					System.out.print("\033[0m");
-				}
-
-				else if (myMap[i][j].type =='X') {
-					System.out.print("\033[34m" + 'X');
-					System.out.print("\033[0m");
-				}
-				else
-					System.out.print(myMap[i][j].type);
-			}
-			System.out.println();
-		}
+		showMap();
+		
 		if (paths[0] != null)
 			for (Vertex tmp : paths[0])
 				myMap[tmp.x][tmp.y].type = 'O' ;
@@ -200,12 +208,12 @@ public class Solver
 				robotSteps(initR1,initR2,goal);
 			else {
 				System.out.println("Wrong option");
-				System.out.println("Available options : simple map step");
+				System.out.println("Available options : [simple|map|step]");
 			}
 		}
 		else {
 			System.out.println("Usage: java Solver input_file option");
-			System.out.println("Available options : simple map step");
+			System.out.println("Available options : [simple|map|step]");
 		}
 	}
 }
