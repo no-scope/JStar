@@ -74,16 +74,12 @@ public class Solver
 	{
 		for (Vertex tmp : path)
 			tmp.printme();
-
 	}
 
 	private static boolean solved(Vertex pos1, Vertex pos2, Vertex goal)
 	{
-		if ((pos1.equals(goal) && pos1.isNeighbour(pos2)) ||
-				(pos2.equals(goal) && pos2.isNeighbour(pos1)))
-			return true ;
-
-		return false;
+		return ((pos1.equals(goal) && pos1.isNeighbour(pos2)) ||
+				(pos2.equals(goal) && pos2.isNeighbour(pos1)));
 	}
 
 
@@ -103,35 +99,39 @@ public class Solver
 		Robot r0 = new Robot(xMax, yMax, initR1, goal, myMap);
 		Robot r1 = new Robot(xMax, yMax, initR2, goal, myMap);
 
-		Path[] paths = new Path[2];
 		Path path0 = new Path();
 		Path path1 = new Path();
 
 		path0.add(initR1);
 		path1.add(initR2);
 
-		while(!solved(r0.getPos(), r1.getPos(), goal)) {
+		// use 2 vertices to avoid multiple method calls
+		Vertex r0_pos = r0.getPos();
+		Vertex r1_pos = r1.getPos();
+
+		while (!solved(r0_pos, r1_pos, goal)) {
 
 			/* DEBUG */
 
 			//if (!r0.getPos().equals(goal))
 			//	System.out.println("__Robot1 Searching...");
 
-			r0.moveAndAvoid(r1.getPos());
+			r0.moveAndAvoid(r1_pos);
+			r0_pos = r0.getPos();
 			/* DEBUG */
 
 			//if (!r1.getPos().equals(goal))
 			//	System.out.println("__Robot2 Searching...");
 
-			r1.moveAndAvoid(r0.getPos());
+			r1.moveAndAvoid(r0_pos);
+			r1_pos = r1.getPos();
 
-			path0.add(r0.getPos());
-			path1.add(r1.getPos());
+			path0.add(r0_pos);
+			path1.add(r1_pos);
 		}
-		paths[0] = path0;
-		paths[1] = path1;
 		//System.out.println("Number Of States = " + (r0.getStates()+r1.getStates()));
-		return paths;
+		
+		return (new Path[] {path0, path1});
 	}
 
 	/*
@@ -147,19 +147,25 @@ public class Solver
 		Robot r0 = new Robot(xMax, yMax, initR1, goal, myMap);
 		Robot r1 = new Robot(xMax, yMax, initR2, goal, myMap);
 
-		Path[] paths = new Path[2];
 		Path path0 = new Path();
 		Path path1 = new Path();
 
 		path0.add(initR1);
 		path1.add(initR2);
 
-		while(!solved(r0.getPos(), r1.getPos(), goal)) {
+		Vertex p0 = r0.getPos();
+		Vertex p1 = r1.getPos();
 
-			r0.moveAndAvoid(r1.getPos());
-			r1.moveAndAvoid(r0.getPos());
-			path0.add(r0.getPos());
-			path1.add(r1.getPos());
+		while(!solved(p0, p1, goal)) {
+
+			r0.moveAndAvoid(p1);
+			p0 = r0.getPos();
+
+			r1.moveAndAvoid(p0);
+			p1 = r1.getPos();
+
+			path0.add(p0);
+			path1.add(p1);
 
 			/* A time interval to distinguish the steps */
 			try {
@@ -171,11 +177,9 @@ public class Solver
 			/* refresh terminal screen */
 			System.out.print(ANSI_CLS + ANSI_HOME);
 			System.out.flush();
-			paths[0] = path0;
-			paths[1] = path1;
 
 			/* print new gridmap */
-			printPaths(paths);
+			printPaths(new Path[] {path0, path1});
 
 		}
 	}
