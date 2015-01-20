@@ -13,7 +13,7 @@ public class Robot
 	public Robot(int xMax, int yMax, Vertex pos, Vertex goal, Vertex[][] myMap)
 	{
 		search = new StarSolver(xMax, yMax, myMap);
-		position = pos ;
+		position = pos;
 		this.goal = goal;
 	}
 
@@ -31,10 +31,7 @@ public class Robot
 	{
 		Vertex ret = search.solve(position, other, other, true);
 
-		if (ret == null){
-			return position;
-		}
-		return ret;
+		return (ret == null ? position : ret);
 	}
 
 	public void moveAndAvoid(Vertex other)
@@ -46,10 +43,8 @@ public class Robot
 
 		else {
 			tmp = search.solve(position, goal, other, false);
-			if (tmp == null)
-				position = follow(other);
-			else
-				position = tmp;
+
+			position = (tmp == null ? follow(other) : tmp);
 		}
 	}
 }
