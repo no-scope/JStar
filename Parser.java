@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.Scanner;
 
 /* Just a simple parser class */
-
 public class Parser
 {
 	static private int[] inputInts;
@@ -12,14 +11,15 @@ public class Parser
 	 * Class Constructor creates the int array and
 	 * the char grid
 	 */
-
 	public Parser(String fil)
 	{
 		try {
 			char ch;
+			int i;
+			String str;
+
 			BufferedReader in =
 				new BufferedReader(new FileReader(fil));
-			int i;
 			Scanner a = new Scanner(in);
 			inputInts = new int[8];
 
@@ -28,15 +28,14 @@ public class Parser
 
 			map = new char [inputInts[0]][inputInts[1]];
 
-			String str;
 
-			for (i = 0; i < inputInts[0]; i++){
+			for (i = 0; i < inputInts[0]; i++) {
 				str = a.next();
 				map[i] = str.toCharArray();
 			}
 			in.close();
 		}
-		catch (Exception e){
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -66,8 +65,7 @@ public class Parser
 		for (int i = 0; i < inputInts[0]; i++)
 			for (int j = 0; j < inputInts[1]; j++)
 				vMap[i][j].findNeighbours(inputInts[0], inputInts[1], vMap);
+
 		return vMap;
 	}
-
-
 }

@@ -38,12 +38,10 @@ public class Robot
 	{
 		Vertex tmp;
 
-		if (other.equals(goal))
+		if (other.equals(goal)) {
 			position = search.solve(position, goal, other, true);
-
-		else {
+		} else {
 			tmp = search.solve(position, goal, other, false);
-
 			position = (tmp == null ? follow(other) : tmp);
 		}
 	}
