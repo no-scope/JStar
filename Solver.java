@@ -2,7 +2,6 @@ import java.util.*;
 
 public class Solver
 {
-
 	static int xMax, yMax;
 	static Vertex[][] myMap;
 
@@ -14,7 +13,7 @@ public class Solver
 
 	public static final Map<Character, String> codes =
 	new HashMap<Character, String>() {{
-		// unnamed init
+		/* Unnamed init */
 		put('1', ANSI_RED + 'O' + ANSI_RESET);
 		put('2', ANSI_YELLOW + 'O' + ANSI_RESET);
 		put('3', ANSI_BLUE + 'O' + ANSI_RESET);
@@ -23,8 +22,8 @@ public class Solver
 		put('X', "X");
 	}};
 
-
-	/* shows the whole map using 
+	/*
+	 * Shows the whole map using 
 	 * designated colourcodes 
 	 */
 	public static void showMap()
@@ -48,6 +47,7 @@ public class Solver
 		if (paths[0] != null)
 			for (Vertex tmp : paths[0])
 				myMap[tmp.x][tmp.y].type = '1';
+	
 		if (paths[1] != null)
 			for (Vertex tmp : paths[1])
 				if (myMap[tmp.x][tmp.y].type == '1')
@@ -59,10 +59,10 @@ public class Solver
 		
 		if (paths[0] != null)
 			for (Vertex tmp : paths[0])
-				myMap[tmp.x][tmp.y].type = 'O' ;
+				myMap[tmp.x][tmp.y].type = 'O';
 		if (paths[1] != null)
 			for (Vertex tmp : paths[1])
-				myMap[tmp.x][tmp.y].type = 'O' ;
+				myMap[tmp.x][tmp.y].type = 'O';
 
 	}
 
@@ -95,7 +95,6 @@ public class Solver
 	private static Path[] robotSolver(Vertex initR1,
 			Vertex initR2, Vertex goal)
 	{
-
 		Robot r0 = new Robot(xMax, yMax, initR1, goal, myMap);
 		Robot r1 = new Robot(xMax, yMax, initR2, goal, myMap);
 
@@ -105,32 +104,19 @@ public class Solver
 		path0.add(initR1);
 		path1.add(initR2);
 
-		// use 2 vertices to avoid multiple method calls
+		/* use 2 vertices to avoid multiple method calls */
 		Vertex r0_pos = r0.getPos();
 		Vertex r1_pos = r1.getPos();
 
 		while (!solved(r0_pos, r1_pos, goal)) {
-
-			/* DEBUG */
-
-			//if (!r0.getPos().equals(goal))
-			//	System.out.println("__Robot1 Searching...");
-
 			r0.moveAndAvoid(r1_pos);
 			r0_pos = r0.getPos();
-			/* DEBUG */
-
-			//if (!r1.getPos().equals(goal))
-			//	System.out.println("__Robot2 Searching...");
-
 			r1.moveAndAvoid(r0_pos);
 			r1_pos = r1.getPos();
-
 			path0.add(r0_pos);
 			path1.add(r1_pos);
 		}
-		//System.out.println("Number Of States = " + (r0.getStates()+r1.getStates()));
-		
+
 		return (new Path[] {path0, path1});
 	}
 
@@ -184,8 +170,6 @@ public class Solver
 		}
 	}
 
-
-
 	public static void main(String[] args)
 	{
 		if (args.length == 2) {
@@ -205,17 +189,15 @@ public class Solver
 				simplePrint(ansPaths[0]);
 				System.out.println("__Path of ROBOT2__");
 				simplePrint(ansPaths[1]);
-			}
-			else if (args[1].equals("map"))
+			} else if (args[1].equals("map")) {
 				printPaths(robotSolver(initR1,initR2,goal));
-			else if (args[1].equals("step"))
+			} else if (args[1].equals("step")) {
 				robotSteps(initR1,initR2,goal);
-			else {
+			} else {
 				System.out.println("Wrong option");
 				System.out.println("Available options : [simple|map|step]");
 			}
-		}
-		else {
+		} else {
 			System.out.println("Usage: java Solver input_file option");
 			System.out.println("Available options : [simple|map|step]");
 		}
